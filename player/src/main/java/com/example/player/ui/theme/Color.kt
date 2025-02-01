@@ -1,6 +1,5 @@
 package com.example.player.ui.theme
 
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
@@ -17,6 +16,7 @@ abstract class BaseColors {
     abstract val textPrimaryHover: Color
     abstract val textSecondaryHover: Color
     abstract val textLink: Color
+    abstract val playerButtonBackground: Color
 }
 
 // TODO: Convert color to Light later (currently still the same as Dark Colors)
@@ -28,6 +28,7 @@ data class LightColors(
     override val textPrimaryHover: Color = Color(0xFF000000),
     override val textSecondaryHover: Color = Color(0xFFFFFFFF),
     override val textLink: Color = Color(0xFF5CA4F8),
+    override val playerButtonBackground: Color = Color(0x4D000000),
 ) : BaseColors()
 
 data class DarkColors(
@@ -38,4 +39,5 @@ data class DarkColors(
     override val textPrimaryHover: Color = Color(0xFF000000),
     override val textSecondaryHover: Color = Color(0xFFFFFFFF),
     override val textLink: Color = Color(0xFF5CA4F8),
+    override val playerButtonBackground: Color = Color(0x4D000000),
 ) : BaseColors()
