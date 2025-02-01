@@ -13,9 +13,8 @@
         android:theme="@style/Theme.TrainingMobile"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name="com.medioka.trainingmobile.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.TrainingMobile">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

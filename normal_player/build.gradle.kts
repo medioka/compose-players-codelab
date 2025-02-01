@@ -1,15 +1,16 @@
 plugins {
+
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    namespace = "com.example.player"
+    namespace = "com.medioka.normal_player"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.normal.player"
+        applicationId = "com.medioka.normal_player"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.trainingmobile"
+    namespace = "com.medioka.trainingmobile"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.trainingmobile"
+        applicationId = "com.medioka.trainingmobile"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TrainingMobile">
         <activity
-            android:name=".MainActivity"
+            android:name="com.medioka.player.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.TrainingMobile">
             <intent-filter>
