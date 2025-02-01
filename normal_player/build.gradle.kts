@@ -9,7 +9,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.player"
+        applicationId = "com.example.normal.player"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.exoplayer.dash)
     implementation(libs.androidx.media3.ui)
+    implementation(libs.androidx.media3.exoplayer.hls)
 
     implementation(libs.ui.tooling.preview)
     debugImplementation(libs.ui.tooling)

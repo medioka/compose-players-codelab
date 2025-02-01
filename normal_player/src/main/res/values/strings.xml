@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Player</string>
+    <string name="format_time_stamp">%s / %s</string>
 </resources>
