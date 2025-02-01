@@ -9,12 +9,15 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.Player
 import com.example.player.callback.ConfigCallback
 import com.example.player.callback.ControlsCallback
 import com.example.player.callback.PlaybackStateCallback
@@ -30,6 +33,7 @@ fun PlayerContent(
     modifier: Modifier = Modifier,
     shouldShowControllerProvider: () -> Boolean,
     isPlayingProvider: () -> Boolean,
+    playbackStateProvider: () -> Int,
     configsCallback: ConfigCallback,
     controlsCallback: ControlsCallback,
     playbackStateCallback: PlaybackStateCallback,
@@ -46,12 +50,27 @@ fun PlayerContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(ASPECT_RATIO),
-            isVisibleProvider = shouldShowControllerProvider
+            isVisibleProvider = {
+                val isBuffering =
+                    playbackStateProvider() == Player.STATE_IDLE || playbackStateProvider() == Player.STATE_BUFFERING
+                shouldShowControllerProvider() || isBuffering
+            }
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(TrainingMobileTheme.colorScheme.primaryBackground.copy(0.5f))
+            )
+        }
+
+        VisibilityWrapper(
+            modifier = Modifier.align(Alignment.Center),
+            isVisibleProvider = { !shouldShowControllerProvider() && (playbackStateProvider() == Player.STATE_IDLE || playbackStateProvider() == Player.STATE_BUFFERING) }
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                color = TrainingMobileTheme.colorScheme.textPrimary,
+                strokeWidth = 2.dp
             )
         }
 
@@ -132,6 +151,7 @@ private fun PlayerContentPreview() {
                 override fun onCaptionClick() = Unit
                 override fun onSettingClick() = Unit
             },
+            playbackStateProvider = { Player.STATE_IDLE },
             controlsCallback = object : ControlsCallback {
                 override fun play() = Unit
                 override fun pause() = Unit

@@ -1,6 +1,7 @@
 package com.example.player.builder
 
 import android.content.Context
+import android.media.session.PlaybackState
 import android.net.Uri
 import androidx.annotation.OptIn
 import androidx.compose.runtime.Composable
@@ -8,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MimeTypes
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.TrackSelectionParameters
@@ -24,6 +26,7 @@ import com.example.player.callback.ControlsCallback
 import com.example.player.callback.PlaybackStateCallback
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 @UnstableApi
 class PlayerManager(
@@ -34,6 +37,12 @@ class PlayerManager(
 
     private val _isPlaying = MutableStateFlow(false)
     val isPlaying = _isPlaying.asStateFlow()
+
+    private val _playbackException = MutableStateFlow<PlaybackException?>(null)
+    val playbackException = _playbackException.asStateFlow()
+
+    private val _playbackState = MutableStateFlow(Player.STATE_IDLE)
+    val playbackState = _playbackState.asStateFlow()
 
     private var listener: Player.Listener? = null
 
@@ -59,6 +68,11 @@ class PlayerManager(
         listener?.let { player.value?.removeListener(it) }
         player.value?.release()
         _player.value = null
+    }
+
+    fun playOnReconnect() {
+        player.value?.prepare()
+        player.value?.play()
     }
 
     private fun retrieveLastState() {
@@ -144,6 +158,16 @@ class PlayerManager(
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 super.onIsPlayingChanged(isPlaying)
                 _isPlaying.value = isPlaying
+            }
+
+            override fun onPlayerError(error: PlaybackException) {
+                super.onPlayerError(error)
+                _playbackException.update { error }
+            }
+
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                super.onPlaybackStateChanged(playbackState)
+                _playbackState.update { playbackState }
             }
         }
         player.value?.addListener(listener as Player.Listener)

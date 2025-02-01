@@ -16,11 +16,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import com.example.player.builder.rememberPlayerManager
+import com.example.player.utils.connectivity.PlayerConnectivityObserver
 import com.example.player.utils.findActivity
 
 private const val URL = "https://storage.googleapis.com/wvmedia/clear/hevc/tears/tears.mpd"
@@ -29,11 +31,15 @@ private const val URL = "https://storage.googleapis.com/wvmedia/clear/hevc/tears
 @OptIn(UnstableApi::class)
 @Composable
 fun PlayerScreen(modifier: Modifier = Modifier) {
-    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
     val playerManager = rememberPlayerManager(URL)
+
+    // States
     val player by playerManager.player.collectAsStateWithLifecycle()
     val isPlaying by playerManager.isPlaying.collectAsStateWithLifecycle()
+    val playbackException by playerManager.playbackException.collectAsStateWithLifecycle()
+    val playbackState by playerManager.playbackState.collectAsStateWithLifecycle()
     var shouldShowController by remember { mutableStateOf(false) }
 
     DisposableEffect(lifecycleOwner) {
@@ -58,10 +64,16 @@ fun PlayerScreen(modifier: Modifier = Modifier) {
         }
     }
 
+    PlayerConnectivityObserver(
+        playbackExceptionProvider = { playbackException },
+        blockToRunOnNetworkReconnect = playerManager::playOnReconnect
+    )
+
     PlayerContent(
         modifier = modifier,
-        isPlayingProvider = { isPlaying },
         shouldShowControllerProvider = { shouldShowController },
+        isPlayingProvider = { isPlaying },
+        playbackStateProvider = { playbackState },
         configsCallback = playerManager.configCallback,
         controlsCallback = playerManager.controlsCallback,
         playbackStateCallback = playerManager.playbackStateCallback
