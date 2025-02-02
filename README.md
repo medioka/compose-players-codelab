@@ -1,10 +1,10 @@
 # ExoPlayer in Jetpack Compose
 
-This repository is intended as a codelab of mine to handle many type of players in Jetpack Compose.
+This repository is intended as a codelab of mine to showcase several types of Player in Jetpack Compose.
 The plan is to show the implementation of ExoPlayer, like we see in Views. 
 
-I created this because, I have a hard time to find an example of ExoPlayer implementation in Jetpack Compose,
-while maintaining proper resource handling of the ExoPlayer. **NOT only get `RELEASE` when it goes `ON_DISPOSE` state**
+I created this because, I have a hard time to find an example of ExoPlayer implementation in Jetpack Compose
+that maintain proper resource handling of the ExoPlayer. **Most of the Examples I've seen only `RELEASE` the resources when it goes `ON_DISPOSE` state**
 
 I hope it can be useful for you.😊
 
@@ -16,7 +16,13 @@ For now, the Player support these :
 - Saving last state of Playback everytime it goes `ON_STOP` and Retrieving the last state everytime it goes `ON_START`.
 - Auto play on Network Reconnected.
 
-📱 **DEMO**
+🏢 **Structuring**
+------------
+For the implementation of the Builder and UI, you can see links below:
+- Player Manager that consist Builder, Listener, and its states in here [PlayerManager.kt](https://github.com/medioka/compose-players-codelab/blob/master/normal_player/src/main/java/com/medioka/player/PlayerContent.kt)
+- Player UI in here [PlayerContent.kt](https://github.com/medioka/compose-players-codelab/blob/master/normal_player/src/main/java/com/medioka/player/PlayerContent.kt)
+
+📱**DEMO**
 ------------
 ![player_controller](https://github.com/user-attachments/assets/c8bf8996-6cd7-4382-9010-ca7ea9ed8534)
 
