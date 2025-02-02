@@ -24,8 +24,10 @@ import androidx.media3.ui.PlayerView
 import com.medioka.player.builder.rememberPlayerManager
 import com.medioka.player.utils.connectivity.PlayerConnectivityObserver
 import com.medioka.player.utils.findActivity
+import com.medioka.player.utils.rememberInputEventState
 
 private const val URL = "https://storage.googleapis.com/wvmedia/clear/hevc/tears/tears.mpd"
+private const val HIDE_DURATION = 5
 
 @SuppressLint("SourceLockedOrientationActivity")
 @OptIn(UnstableApi::class)
@@ -40,7 +42,9 @@ fun PlayerScreen(modifier: Modifier = Modifier) {
     val isPlaying by playerManager.isPlaying.collectAsStateWithLifecycle()
     val playbackException by playerManager.playbackException.collectAsStateWithLifecycle()
     val playbackState by playerManager.playbackState.collectAsStateWithLifecycle()
+
     var shouldShowController by remember { mutableStateOf(false) }
+    val inputEventState = rememberInputEventState(seconds = HIDE_DURATION)
 
     DisposableEffect(lifecycleOwner) {
         val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
@@ -83,6 +87,17 @@ fun PlayerScreen(modifier: Modifier = Modifier) {
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = {
+                    // Auto close controller after HIDE_DURATION seconds
+                    inputEventState.setIdleTimeoutCallback(
+                        seconds = if (!shouldShowController) {
+                            HIDE_DURATION
+                        } else {
+                            Int.MAX_VALUE
+                        },
+                        onIdleTimeout = {
+                            shouldShowController = !shouldShowController
+                        }
+                    )
                     shouldShowController = !shouldShowController
                 }
             ),
