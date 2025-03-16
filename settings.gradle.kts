@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Training Mobile"
 include(":app")
-include(":normal_player")
+include(":players")
+include(":core_ui")
